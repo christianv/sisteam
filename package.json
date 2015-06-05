@@ -1,0 +1,25 @@
+{
+  "name": "sisteam",
+  "version": "0.0.1",
+  "description": "API for UC Berkeley SIS Members",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/christianv/sisteam.git"
+  },
+  "keywords": [
+    "SIS",
+    "UC",
+    "Berkeley",
+    "API"
+  ],
+  "author": "Christian Vuerings <vueringschristian@gmail.com> (http://denbuzze.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/christianv/sisteam/issues"
+  },
+  "homepage": "https://github.com/christianv/sisteam"
+}
