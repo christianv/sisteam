@@ -2,7 +2,7 @@
   "name": "sisteam",
   "version": "0.0.1",
   "description": "API for UC Berkeley SIS Members",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,6 +22,9 @@
     "url": "https://github.com/christianv/sisteam/issues"
   },
   "homepage": "https://github.com/christianv/sisteam",
+  "engines": {
+    "node": "0.12.4"
+  },
   "dependencies": {
     "cheerio": "^0.19.0",
     "express": "^4.12.4",
