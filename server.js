@@ -5,6 +5,7 @@ var dateFormat = require('dateformat');
 var app = express();
 
 var picturesCache;
+var scrapeUrl = 'http://sisproject.berkeley.edu/team';
 
 var sendError = function(res, errorMessage) {
   res.send({
@@ -35,7 +36,8 @@ var sendPictures = function(res) {
   var now = new Date();
   res.send({
     devInfo: {
-      date: dateFormat(now, 'isoDateTime')
+      date: dateFormat(now, 'isoDateTime'),
+      scrapeUrl: scrapeUrl
     },
     pictures: picturesCache
   });
@@ -45,7 +47,7 @@ var getPictures = function(res) {
   var now = new Date();
   console.log(dateFormat(now, 'isoDateTime') + ' - Getting the pictures');
   request({
-    url: 'http://sisproject.berkeley.edu/team'
+    url: scrapeUrl
   }, function (error, response, body) {
     if (!error && response.statusCode === 200) {
       picturesCache = parsePictures(body);
