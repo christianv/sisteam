@@ -1,7 +1,10 @@
 var express = require('express');
 var request = require('request');
 var cheerio = require('cheerio');
+var dateFormat = require('dateformat');
 var app = express();
+
+var picturesCache;
 
 var sendError = function(res, errorMessage) {
   res.send({
@@ -24,20 +27,31 @@ var parsePictures = function(body) {
     };
     pictures.push(picture);
   });
-  console.log(pictures.length);
 
   return pictures;
 };
 
+var sendPictures = function(res) {
+  var now = new Date();
+  res.send({
+    devInfo: {
+      date: dateFormat(now, 'isoDateTime')
+    },
+    pictures: picturesCache
+  });
+}
+
 var getPictures = function(res) {
+  var now = new Date();
+  console.log(dateFormat(now, 'isoDateTime') + ' - Getting the pictures');
   request({
     url: 'http://sisproject.berkeley.edu/team'
   }, function (error, response, body) {
     if (!error && response.statusCode === 200) {
-      var pictures = parsePictures(body);
-      res.send({
-        pictures: pictures
-      });
+      picturesCache = parsePictures(body);
+      if (res) {
+        sendPictures(res);
+      }
     }
   });
 };
@@ -58,8 +72,21 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(allowCrossDomain);
 app.get('/api/pictures', function(req, res){
-  getPictures(res);
+  if (!picturesCache) {
+    getPictures(res);
+  } else {
+    sendPictures(res);
+  }
+});
+
+app.get('/', function(req, res){
+  res.send({
+    'api': 'http://sisteam.herokuapp.com/api/pictures'
+  })
 });
 
 var port = process.env.PORT || 3100;
 app.listen(port);
+
+
+setInterval(getPictures, 10000);

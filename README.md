@@ -1,7 +1,7 @@
 # SIS Team
 
 An API to fetch members of the SIS Team
-http://sisteam.herokuapp.com/sisteam
+http://sisteam.herokuapp.com/api/pictures
 
 ## Installation
 
