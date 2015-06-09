@@ -21,4 +21,9 @@ And go to [localhost:3100/api/pictures](http://localhost:3100/api/pictures)
 heroku git:remote -a sisteam
 ```
 
+### Config variables
+
+```
+heroku config:set NODE_ENV=production
+```
 
