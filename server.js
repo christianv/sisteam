@@ -3,6 +3,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 var dateFormat = require('dateformat');
 var app = express();
+var env = process.env.NODE_ENV || 'development';
 
 var picturesCache;
 var scrapeUrl = 'http://sisproject.berkeley.edu/team';
@@ -19,7 +20,7 @@ var parsePictures = function(body) {
 
   var pictures = [];
 
-  $('table[cellpadding="3"] td:has(img)').each(function(i, element) {
+  $('table[cellpadding="3"] td:has(img)').each(function() {
     var picture = {
       image: $('img', this).attr('src'),
       // Temp fix, we need this for Jocelyn Newman
@@ -58,6 +59,16 @@ var getPictures = function(res) {
   });
 };
 
+/**
+ * Since we're showing personal pictures, make sure we only pass data over https
+ */
+var forceSSL = function(req, res, next) {
+  if (req.headers['x-forwarded-proto'] !== 'https') {
+    return res.redirect(['https://', req.get('Host'), req.url].join(''));
+  }
+  return next();
+};
+
 var allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET');
@@ -72,6 +83,11 @@ var allowCrossDomain = function(req, res, next) {
   }
 };
 
+// When in production, force SSL
+if (env === 'production') {
+  app.use(forceSSL);
+}
+
 app.use(allowCrossDomain);
 app.get('/api/pictures', function(req, res){
   if (!picturesCache) {
@@ -83,12 +99,11 @@ app.get('/api/pictures', function(req, res){
 
 app.get('/', function(req, res){
   res.send({
-    'api': 'http://sisteam.herokuapp.com/api/pictures'
-  })
+    'api': req.protocol + '://' + req.get('host') + '/api/pictures'
+  });
 });
 
 var port = process.env.PORT || 3100;
 app.listen(port);
-
 
 setInterval(getPictures, 10000);
