@@ -49,7 +49,7 @@ var getPictures = function(res) {
   console.log(dateFormat(now, 'isoDateTime') + ' - Getting the pictures');
   request({
     url: scrapeUrl
-  }, function (error, response, body) {
+  }, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       picturesCache = parsePictures(body);
       if (res) {
@@ -77,8 +77,7 @@ var allowCrossDomain = function(req, res, next) {
   // intercept OPTIONS method
   if ('OPTIONS' == req.method) {
     res.send(200);
-  }
-  else {
+  } else {
     next();
   }
 };
@@ -89,7 +88,7 @@ if (env === 'production') {
 }
 
 app.use(allowCrossDomain);
-app.get('/api/pictures', function(req, res){
+app.get('/api/pictures', function(req, res) {
   if (!picturesCache) {
     getPictures(res);
   } else {
@@ -97,7 +96,7 @@ app.get('/api/pictures', function(req, res){
   }
 });
 
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
   res.send({
     'api': req.protocol + '://' + req.get('host') + '/api/pictures'
   });
@@ -107,3 +106,4 @@ var port = process.env.PORT || 3100;
 app.listen(port);
 
 setInterval(getPictures, 10000);
+getPictures();
