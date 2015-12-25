@@ -21,8 +21,12 @@ var parsePictures = function(body) {
   var pictures = [];
 
   $('table[cellpadding="3"] td:has(img)').each(function() {
+    var image = $('img', this).attr('src');
+    if (image.lastIndexOf('/sites/', 0) === 0) {
+      image = 'http://sisproject.berkeley.edu' + image;
+    }
     var picture = {
-      image: $('img', this).attr('src'),
+      image: image,
       // Temp fix, we need this for Jocelyn Newman
       name: $('strong', this).text() || $('b', this).text(),
       title: $('a', this).text()
